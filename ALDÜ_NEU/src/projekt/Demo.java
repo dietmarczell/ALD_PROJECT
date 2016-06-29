@@ -13,13 +13,14 @@ public class Demo {
 		// TODO Auto-generated method stub
 		//Dijkstra Test
 		
-		HashMap<String, Vertex> Vertexes = new HashMap<>();
+		HashMap<String, Vertex> Vertexeshash = new HashMap<>();
 		ArrayList<Node<String>> KnotenOrte = new ArrayList<>();
 		ArrayList<Kanten> kanten = new ArrayList<>();
 		File f = new File("D://temp//ALD_UEBUNG_CSV.csv");
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);
-		
+		ArrayList<Vertex> vertexes = new ArrayList<Vertex>();
+		ArrayList<Edge> edges = new ArrayList<Edge>();
 		//Variablen initialisieren
 		String line;
 		
@@ -40,12 +41,13 @@ public class Demo {
 			}
 			
 			Vertex x = new Vertex(Oid, Ort);
-			Vertexes.put(Oid, x);
-			
+			Vertexeshash.put(Oid, x);
+			vertexes.add(x);
 				
 		}
 		fr = new FileReader(f);
 		br = new BufferedReader(fr);
+		int J = 0;
 		String srcid;
 		String destid;
 		int weight;
@@ -56,10 +58,27 @@ public class Demo {
 				destid = line.split(";")[i].split("x")[0];
 				weight = Integer.parseInt(line.split(";")[i].split("x")[1]);
 			//Edges erstellen
+			Edge e = new Edge(String.valueOf(J++), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
+			new Edge(String.valueOf(J), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
+			//System.out.println("Edge: " + String.valueOf(J) + Vertexeshash.get(srcid) + Vertexeshash.get(destid) + weight );
+			
+			edges.add(e);
 			}
 			
 				
 		}
+		/*System.out.println("------------------------------");
+		System.out.println(Vertexes.toString());*/
+		Graph g = new Graph(vertexes, edges);
+		Dijkstra ca = new Dijkstra(g);
+		System.out.println(Vertexeshash.get("1"));
+		Vertex vx = new Vertex("1", "Graz");
+		Vertex vy = new Vertex("2", "Innsbruck");
+		System.out.println(vx.toString());
+		ca.execute(vx);
+		System.out.println(ca.getPath(vy));
+		
+		
 		/*System.out.println("Arraylist  ort mit Objekten ORT: -----------------------");
 		for (Node<String> x : KnotenOrte) {	System.out.println(x.toString());		}
 		//bei der toString Methode wird hier nur der pointer auf das Array con[][] ausgegeben!

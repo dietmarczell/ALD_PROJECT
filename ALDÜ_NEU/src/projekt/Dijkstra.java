@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class calculate {
+public class Dijkstra {
 
   private final List<Vertex> nodes;
   private final List<Edge> edges;
@@ -18,7 +18,7 @@ public class calculate {
   private HashMap<Vertex, Vertex> predecessors;
   private HashMap<Vertex, Integer> distance;
 
-  public calculate(Graph graph) {
+  public Dijkstra(Graph graph) {
     // create a copy of the array so that we can operate on this array
     this.nodes = new ArrayList<Vertex>(graph.getVertexes());
     this.edges = new ArrayList<Edge>(graph.getEdges());
@@ -54,7 +54,8 @@ public class calculate {
   }
 
   private int getDistance(Vertex node, Vertex target) {
-    for (Edge edge : edges) {
+
+	  for (Edge edge : edges) {
       if (edge.getSource().equals(node)
           && edge.getDestination().equals(target)) {
         return edge.getWeight();
