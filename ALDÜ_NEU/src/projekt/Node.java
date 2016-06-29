@@ -1,7 +1,11 @@
 package projekt;
 
+import java.util.ArrayList;
+
 public class Node<Type> {
 
+	ArrayList<String> nv = new ArrayList<>();
+	int id;
 	/**
 	 * Linkes Kind
 	 */
@@ -29,6 +33,7 @@ public class Node<Type> {
 	 */
 	public Node(Type value) {
 		this.value = value;
+		//this.id = Integer.parseInt(this.getValue().toString().split(",")[0].substring(1));
 	}
 
 	public Node<Type> getLeft() {
@@ -37,6 +42,11 @@ public class Node<Type> {
 
 	public void setLeft(Node<Type> left) {
 		this.left = left;
+	}
+
+	@Override
+	public String toString() {
+		return "Node [value=" + value + "]";
 	}
 
 	public Node<Type> getRight() {

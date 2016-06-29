@@ -1,12 +1,8 @@
 package test;
 
-import javax.lang.model.element.Name;
-import javax.swing.text.StyledEditorKit.ForegroundAction;
-
-
 public class BinaryTree {
 
-	Node root;
+	public Node root;
 	
 	
 	public void addNote(int key, String name)
@@ -65,7 +61,7 @@ public class BinaryTree {
 		}
 	}
 	
-	private Node search(String name, Node node)
+	public Node search(String name, Node node)
 	{
 		if(node !=null)
 		{
@@ -92,7 +88,7 @@ public class BinaryTree {
 		}
 		
 	
-	class Node{
+	public class Node{
 		
 		int Key;
 		String name;
@@ -110,9 +106,13 @@ public class BinaryTree {
 			return name +" has the key " +Key;
 		}
 		
-		
-		
+		public Integer getKey() {
+			return Key;
 		}
+		public String getname() {
+			return name;
+		}
+	}
 		
 		
 	public static void main(String[] args) {
