@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 
 public class server {
+	private static final String Vertex = null;
 	static BufferedWriter bw = null;
 	static BufferedReader br = null;
 	static ServerSocket ss = null;
@@ -27,6 +28,11 @@ public class server {
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
 	static Timestamp time = new Timestamp(System.currentTimeMillis());
 	static String timenow = sdf.format(time);
+	
+	//jakob
+	static ArrayList<Edge> edge_list = new ArrayList<>();
+	private static Final.Vertex startvertex;
+	private static Final.Vertex endvertex;
 	
 	public static void main(String[] args) {
 
@@ -48,6 +54,7 @@ public class server {
 			String line;
 			String Oid = new String();
 			String Ort = new String();
+			
 			
 //			Knoten erfassen
 			try {
@@ -89,6 +96,7 @@ public class server {
 			String srcid = null;
 			String destid = null;
 			int weight = 0;
+			String edge_name = null;
 //			Einlesen der Kanten
 			try {
 				while((line = br.readLine())!=null)
@@ -98,10 +106,12 @@ public class server {
 					{
 						destid = line.split(";")[i].split("x")[0];
 						weight = Integer.parseInt(line.split(";")[i].split("x")[1]);
+						edge_name = line.split(";")[i].split("x")[2]; 
 						//Edges erstellen
-						Edge e = new Edge(String.valueOf(Kid++), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
-						new Edge(String.valueOf(Kid), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
+						Edge e = new Edge(String.valueOf(Kid++), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight, edge_name);
+						new Edge(String.valueOf(Kid), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight, edge_name);
 						edges.add(e);
+						edge_list.add(e); // will be given to Dijkstra to give out Edge_names
 					}
 				}
 			} catch (NumberFormatException | IOException e) {
@@ -127,6 +137,7 @@ public class server {
 
 //		Dangerzone begin
 		Dijkstra ca = new Dijkstra(g);
+		
 /*		Alter Test auf Serverkonsole		
 		System.out.println(Vertexeshash.get("1"));
 		Vertex vx = new Vertex("1", "Graz");
@@ -159,7 +170,7 @@ public class server {
 			while(true)
 			{
 				Socket cls = ss.accept();
-				
+				//Putty begrüßung anfang
 				bw = new BufferedWriter(new OutputStreamWriter(cls.getOutputStream()));
 				br = new BufferedReader(new InputStreamReader(cls.getInputStream()));
 				bw.write("Verbindung erfolgreich hergestellt");
@@ -172,61 +183,108 @@ public class server {
 				bw.newLine();
 				bw.write(vertexes.toString());
 				bw.newLine();
+				bw.write("Verfuegbare Suchstrategien:");
+				bw.newLine();
+				bw.write("Dijkstra, Tiefensuche, Breitensuche");
+				bw.newLine();
 				bw.flush();
-				
-				String[] commands = {"ROUTE","START","ZIEL","EXIT"};
-				String consoleline;
+				//Putty begrüßung ende
+				String[] strategies = {"DIJKSTRA", "TIEFENSUCHE", "BREITENSUCHE"};
+				String[] commands = {"STRATEGIE","START","ZIEL","EXIT"};
+				String consoleline = new String();
 				String Eingabe_start = new String();
 				String Eingabe_end = new String();
-				
+				boolean found = false;
 				while((consoleline = br.readLine()) != null) 
 				{		
-					if(consoleline.split(":")[0].toUpperCase().equals(commands[0]))
-					{
-						bw.write("bitte aktuellen Standort eingeben");
-						bw.newLine();
-						bw.flush();
-					}
-					else if(consoleline.split(":")[0].toUpperCase().equals(commands[1]))
+					String[] consoleline_split = consoleline.split(":");
+					
+					
+				 if(consoleline_split[0].toUpperCase().equals(commands[1]))
 					{
 						Eingabe_start = consoleline.split(":")[1];
 						Eingabe_start = Eingabe_start.substring(0,1).toUpperCase() + Eingabe_start.substring(1);
-					
-						System.out.println(BT.search(Eingabe_start.trim(), BT.root));
-						BinaryTree.Node startnode = BT.search(Eingabe_start.trim(), BT.root);
-						Vertex startvertex = new Vertex(startnode.getKey().toString(), startnode.getname());
-						ca.execute(startvertex);
 						
-						bw.write("Ihr Standort lautet: " + Eingabe_start);
+						for (Vertex v : vertexes) {
+							if(v.getName().equals(Eingabe_start))
+							{
+								found = true;
+								BinaryTree.Node startnode = BT.search(Eingabe_start.trim(), BT.root);
+								bw.write("Ihr Standort lautet: " + Eingabe_start);
+								bw.newLine();
+								bw.flush();
+								startvertex = new Vertex(startnode.getKey().toString(), startnode.getname());
+								break;
+							}
+							
+						}
+					if(!found)
+					{
+						bw.write("Startort nicht gefunden, Eingabe überprüfen");
 						bw.newLine();
 						bw.flush();
 					}
-					else if(consoleline.split(":")[0].toUpperCase().equals(commands[2]))
+						found = false;
+						
+						
+					}
+					else if(consoleline_split[0].toUpperCase().equals(commands[2]))
 					{
 						Eingabe_end = consoleline.split(":")[1];
-						Eingabe_end = Eingabe_end .substring(0,0).toUpperCase() + Eingabe_end .substring(1);
-						bw.write("Ihr Ziel lautet: " + Eingabe_end);
-						bw.newLine();
-						bw.flush();
-						if(Eingabe_start != null && Eingabe_end != null && Eingabe_end != Eingabe_start)
-						bw.write("Ihre Strecke von " + Eingabe_start + " nach " +  Eingabe_end + " wird berechnet.");
-						bw.newLine();
-						bw.flush();
-						
-						System.out.println(BT.search(Eingabe_end.trim(), BT.root));
-						BinaryTree.Node endnode = BT.search(Eingabe_end.trim(), BT.root);
-						Vertex endvertex = new Vertex(endnode.getKey().toString(), endnode.getname());
-						bw.write("Kuerzester Weg: "+ca.getPath(endvertex));
-						bw.newLine();
-						bw.flush();
-					}
-					else if(!consoleline.split(":")[0].equals(commands))
+						Eingabe_end = Eingabe_end .substring(0,1).toUpperCase() + Eingabe_end .substring(1);
+						for (Vertex v : vertexes) {
+							if(v.getName().equals(Eingabe_end))
+							{
+								found = true;
+								BinaryTree.Node endnode = BT.search(Eingabe_end.trim(), BT.root);
+								bw.write("Ihr Standort lautet: " + Eingabe_end);
+								bw.newLine();
+								bw.flush();
+								endvertex = new Vertex(endnode.getKey().toString(), endnode.getname());
+								break;
+							}
+							
+						}
+					if(!found)
 					{
-						bw.write("Ungueltiger Befehl");
+						bw.write("Zielort nicht gefunden, Eingabe überprüfen");
 						bw.newLine();
 						bw.flush();
 					}
-					else if(consoleline.split(":")[0].toUpperCase().equals(commands[3]))
+						found = false;
+						
+						
+					}
+
+					else if(consoleline_split[0].toUpperCase().equals(commands[0]))
+					{
+						if(consoleline_split[1].toUpperCase().equals(strategies[0]))
+						{
+							ca.execute(startvertex);
+							if(Eingabe_start != null && Eingabe_end != null && Eingabe_end != Eingabe_start)
+							bw.write("Ihre Strecke von " + Eingabe_start + " nach " +  Eingabe_end + " wird berechnet.");
+							bw.newLine();
+							bw.write("Kuerzester Weg: "+ca.getPath(endvertex, edge_list)); // soll auch ArrayList über Edges mitgeben
+							bw.flush();
+						}
+						else if(consoleline.toUpperCase().equals(strategies[1]))
+						{
+							
+						}
+						else if(consoleline.toUpperCase().equals(strategies[2]))
+						{
+							
+						}
+						else
+						{
+							bw.write("Strategie nicht gefunden");
+							bw.newLine();
+						}
+						
+						
+					}
+					
+					else if(consoleline_split[0].toUpperCase().equals(commands[3]))
 					{
 						bw.write("Verbindung wird getrennt");
 						bw.newLine();
@@ -235,8 +293,12 @@ public class server {
 						bw.flush();
 						close();
 					} 
-					
-						
+					else
+					{
+						bw.write("Ungueltiger Befehl");
+						bw.newLine();
+						bw.flush();
+					}	
 				}
 			}
 		} 	
@@ -246,12 +308,7 @@ public class server {
 			e.printStackTrace();
 			
 			Logger.LogMessage(timenow + "Server kann nicht gestartet werden, Port überprüfen");
-		
-		}
-		
-		
-	
-		
+		}	
 	}
 	public static void close() 
 	{
@@ -264,9 +321,6 @@ public class server {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Logger.LogMessage(timenow + "Inputs und Outputs können nicht Ordnungsgemäß geschlossen werden");
-		}
-		
-	
+		}	
 	}
-
 }

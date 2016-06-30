@@ -64,7 +64,10 @@ public class Demo {
 			
 			edges.add(e);
 			}
-			
+			for (Vertex vert : vertexes) {
+				KnotenOrte.add(new Node<String>(vert.getId()));
+				
+			}
 				
 		}
 		/*System.out.println("------------------------------");

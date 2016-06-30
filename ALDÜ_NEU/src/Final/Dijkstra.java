@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class Dijkstra {
@@ -105,8 +104,10 @@ public class Dijkstra {
   /*
    * This method returns the path from the source to the selected target and
    * NULL if no path exists
+   * also gets an ArrayList of all Edges to find the Name of the current Edge
    */
-  public LinkedList<Vertex> getPath(Vertex target) {
+  
+  public LinkedList<Vertex> getPath(Vertex target, ArrayList<Edge> edge_list) {
     LinkedList<Vertex> path = new LinkedList<Vertex>();
     Vertex step = target;
     // check if a path exists
@@ -115,7 +116,16 @@ public class Dijkstra {
     }
     path.add(step);
     while (predecessors.get(step) != null) {
+    	
+    	//Expands the path by an Edge-name between two Vertexes
+    	for (Edge fromto : edge_list) {
+			if((fromto.getSource().equals((predecessors).get(step)))&&(fromto.getDestination().equals(step)))
+			{
+				path.add(new Vertex("", fromto.getName()));
+			}	
+		}
       step = predecessors.get(step);
+     
       path.add(step);
     }
     // Put it into the correct order

@@ -5,14 +5,22 @@ public class Edge  {
   private final Vertex source;
   private final Vertex destination;
   private final int weight; 
+  private final String name;
   
-  public Edge(String id, Vertex source, Vertex destination, int weight) {
+
+
+public Edge(String id, Vertex source, Vertex destination, int weight, String name) {
     this.id = id;
     this.source = source;
     this.destination = destination;
     this.weight = weight;
+    this.name = name;
   }
   
+public String getName() {
+	return name;
+}
+
   public String getId() {
     return id;
   }

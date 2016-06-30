@@ -5,31 +5,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class Breitensuche extends BaseTree<Integer> {
+import test.BinaryTree;
 
-	@Override
-	protected int compare(Integer a, Integer b) {
-		return a.compareTo(b);
-	}
+public class Breitensuche extends BinaryTree {
 
 	/**
 	 * Liefert Knoten des Baums ausgehend von Start in Reihenfolge der Breitensuche zurück
 	 * @param start Startknoten für Teilbaum
 	 * @return Liste der Knoten in Breitenfolge
 	 */
-	public List<Integer> getBreadthFirstOrder(Node<Integer> start) {
+	public List<Integer> getBreadthFirstOrder(Vertex start) {
 
 		ArrayList<Integer> result = new ArrayList<>();
 
-		ArrayDeque<Node<Integer>> queue = new ArrayDeque<>();
+		ArrayDeque<Vertex> queue = new ArrayDeque<>();
 		
 		queue.add(start);
 		
 		while (!queue.isEmpty())
 		{
-			Node<Integer> current = queue.remove();
+			Vertex current = queue.remove();
 			
-			result.add(current.value);
+			result.add(Integer.parseInt(current.getId()));
 			
 			if (current.getLeft() != null)
 				queue.add(current.getLeft());

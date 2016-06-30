@@ -7,67 +7,103 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import projekt.Dijkstra;
+import projekt.Edge;
+import projekt.Graph;
+import projekt.Vertex;
+
 public class Demo {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		Breitensuche bsu = new Breitensuche();
-		ArrayList<String> info = new ArrayList<>();
-		ArrayList<Node> nodes = new ArrayList<>();
-		File f = new File("D://temp//ALD_UEBUNG_CSV.csv");
-		try {
-			FileReader fr = new FileReader(f);
-			BufferedReader br = new BufferedReader(fr);
-			String line;
-			BaseTree<Node> bs = new BaseTree<Node>() {
-				
-				@Override
-				protected int compare(Node a, Node b) {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-			};
-			int j = 0;
-			while((line = br.readLine()) != null)
-			{
-				info.clear();
-				for(int i=0; i<line.split(";").length; i++)
-				{
-					info.add(line.split(";")[i]);
-				}
-				//System.out.println(new Node<ArrayList<String>>(new ArrayList<>(info)).toString());
-				
-				nodes.add(new Node<ArrayList<String>>(new ArrayList<>(info)));
-				
-				//bs.add(nodes.get(j));
-				j++;
+		//Dijkstra Test
+		Breitensuche bs = new Breitensuche();
+		HashMap<String, Vertex> Vertexeshash = new HashMap<>();
+		File f = new File("D://Files//ALD_UEBUNG_CSV.csv");
+		FileReader fr = new FileReader(f);
+		BufferedReader br = new BufferedReader(fr);
+		ArrayList<Vertex> vertexes = new ArrayList<Vertex>();
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		//Variablen initialisieren
+		String line;
+		
+		String Kid=null;
+		String Oid = null;
+		String Ort = null;
+		int kanten_source_id;
+		int kanten_destin_id;
+		int kanten_distance;
+		
+		while((line = br.readLine())!=null)
+		{
+			if(line.split(";").length>0){
+			Oid= line.split(";")[0];
 			}
-			//bs.printTree();
-			//bs.find(nodes.get(0), nodes.get(17));
-			//bsu.getBreadthFirstOrder(nodes.get(0));
-			//System.out.println(nodes.get(0).getValue().toString().split(",")[0].substring(1));
-			System.out.println(nodes.get(0).id);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(line.split(";").length>1){
+			Ort = line.split(";")[1];
+			}
+			
+			Vertex x = new Vertex(Oid, Ort);
+			Vertexeshash.put(Oid, x);
+			vertexes.add(x);
+			bs.addNote(Integer.parseInt(Oid), Ort);
+				
 		}
-		ArrayList<String> nodevalues = new ArrayList<>();
-		nodevalues.add("1");
+		fr = new FileReader(f);
+		br = new BufferedReader(fr);
+		int J = 0;
+		String srcid;
+		String destid;
+		int weight;
+		while((line = br.readLine())!=null)
+		{
+			srcid = line.split(";")[0];
+			for (int i = 2; i < line.split(";").length; i++) {
+				destid = line.split(";")[i].split("x")[0];
+				weight = Integer.parseInt(line.split(";")[i].split("x")[1]);
+			//Edges erstellen
+			Edge e = new Edge(String.valueOf(J++), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
+			new Edge(String.valueOf(J), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
+			//System.out.println("Edge: " + String.valueOf(J) + Vertexeshash.get(srcid) + Vertexeshash.get(destid) + weight );
+			
+			edges.add(e);
+			}
+			
+				
+		}
 		
-		/*
+		/*System.out.println("------------------------------");
+		System.out.println(Vertexes.toString());*/
+		Graph g = new Graph(vertexes, edges);
+		Dijkstra ca = new Dijkstra(g);
+		System.out.println(Vertexeshash.get("1"));
+		Vertex vx = new Vertex("20", "Villach");
+		Vertex vy = new Vertex("2", "Innsbruck");
+		System.out.println(vx.toString());
+		ca.execute(vx);
+		System.out.println(ca.getPath(vy));
+		System.out.println(bs.getBreadthFirstOrder(bs.printVertex(vx)));
+		
+		/*System.out.println("Arraylist  ort mit Objekten ORT: -----------------------");
+		for (Node<String> x : KnotenOrte) {	System.out.println(x.toString());		}
+		//bei der toString Methode wird hier nur der pointer auf das Array con[][] ausgegeben!
 		
 		
-		Node n1 = new Node<ArrayList<String>>(new ArrayList<String>(nodevalues));
-		nodevalues.clear();
-		System.out.println(n1.toString());
-		System.out.println("------");
+		
+		/*System.out.println("Arraylist  katnen mit Objekten KANTEN: -----------------------");
+		for (Kanten x : kanten) {System.out.println(x.toString());	}
+	//	for (Or is : con) {*/
+			
+			
+		}
 		
 		
-		nodevalues.add("Graz");
-		Node n2 = new Node<ArrayList<String>>(nodevalues);
-		System.out.println(n2.toString());
-		nodevalues.clear();
-		*/
-	}
-
-}
+			
+		}

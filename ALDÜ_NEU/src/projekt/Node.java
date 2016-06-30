@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Node<Type> {
 
-	ArrayList<String> nv = new ArrayList<>();
 	int id;
 	/**
 	 * Linkes Kind

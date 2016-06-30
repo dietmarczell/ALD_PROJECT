@@ -2,44 +2,44 @@ package test;
 
 public class BinaryTree {
 
-	public Node root;
+	public Vertex root;
 	
 	
 	public void addNote(int key, String name)
 	{
 		
-		Node newNode = new Node(key, name);
+		Vertex newVertex = new Vertex(key, name);
 		
 		if(root == null)
 		{
-			root = newNode;
+			root = newVertex;
 			
 		}
 		else
 		{
-			Node focusNode = root;
+			Vertex focusVertex = root;
 			
-			Node parent;
+			Vertex parent;
 			
 			while(true)
 			{
-				parent = focusNode;
+				parent = focusVertex;
 				
-				if(key < focusNode.Key)
+				if(key < focusVertex.Key)
 				{
-					focusNode = focusNode.leftChild;
-					if(focusNode == null)
+					focusVertex = focusVertex.leftChild;
+					if(focusVertex == null)
 					{
-						parent.leftChild = newNode;
+						parent.leftChild = newVertex;
 						return;
 					}
 				}
 				else
 				{
-					focusNode = focusNode.rightChild;
-					if(focusNode == null)
+					focusVertex = focusVertex.rightChild;
+					if(focusVertex == null)
 					{
-						parent.rightChild=newNode;
+						parent.rightChild=newVertex;
 						return;
 					}
 				}
@@ -50,34 +50,34 @@ public class BinaryTree {
 	}
 	
 	
-	public void printNode(Node focusNode)
+	public void printVertex(Vertex focusVertex)
 	{
-		if(focusNode!=null)
+		if(focusVertex!=null)
 		{
-			printNode(focusNode.leftChild);
-			System.out.println(focusNode);
-			printNode(focusNode.rightChild);
+			printVertex(focusVertex.leftChild);
+			System.out.println(focusVertex);
+			printVertex(focusVertex.rightChild);
 		
 		}
 	}
 	
-	public Node search(String name, Node node)
+	public Vertex search(String name, Vertex Vertex)
 	{
-		if(node !=null)
+		if(Vertex !=null)
 		{
-			if(node.name.equals(name))
+			if(Vertex.name.equals(name))
 			{
-				return node;
+				return Vertex;
 			}
 			else
 			{
-				Node foundNode = search(name, node.leftChild);
+				Vertex foundVertex = search(name, Vertex.leftChild);
 						
-					if(foundNode == null)
+					if(foundVertex == null)
 					{
-						foundNode = search(name, node.rightChild);
+						foundVertex = search(name, Vertex.rightChild);
 					}
-					return foundNode;
+					return foundVertex;
 						
 			}
 		}
@@ -88,14 +88,14 @@ public class BinaryTree {
 		}
 		
 	
-	public class Node{
+	public class Vertex{
 		
 		int Key;
 		String name;
-		Node leftChild;
-		Node rightChild;
+		Vertex leftChild;
+		Vertex rightChild;
 		
-		Node(int key, String name) {
+		Vertex(int key, String name) {
 			
 			Key = key;
 			this.name = name;
@@ -130,7 +130,7 @@ public class BinaryTree {
 		theTree.addNote(55, "Miami");
 		theTree.addNote(22, "Orlando");
 		
-		theTree.printNode(theTree.root);
+		theTree.printVertex(theTree.root);
 		
 		System.out.println("------------------------------");
 		

@@ -56,8 +56,8 @@ public class Demo {
 				destid = line.split(";")[i].split("x")[0];
 				weight = Integer.parseInt(line.split(";")[i].split("x")[1]);
 			//Edges erstellen
-			Edge e = new Edge(String.valueOf(J++), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
-			new Edge(String.valueOf(J), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight);
+			Edge e = new Edge(String.valueOf(J++), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight,"");
+			new Edge(String.valueOf(J), Vertexeshash.get(srcid), Vertexeshash.get(destid), weight,"");
 			//System.out.println("Edge: " + String.valueOf(J) + Vertexeshash.get(srcid) + Vertexeshash.get(destid) + weight );
 			
 			edges.add(e);
@@ -74,7 +74,7 @@ public class Demo {
 		Vertex vy = new Vertex("2", "Innsbruck");
 		System.out.println(vx.toString());
 		ca.execute(vx);
-		System.out.println(ca.getPath(vy));
+		//System.out.println(ca.getPath(vy),null);
 		
 		
 		/*System.out.println("Arraylist  ort mit Objekten ORT: -----------------------");

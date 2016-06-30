@@ -1,9 +1,45 @@
 package projekt;
 
+
 public class Vertex {
   final private String id;
   final private String name;
-  
+  public Vertex getLeft() {
+	return left;
+}
+public void setLeft(Vertex left) {
+	this.left = left;
+}
+public Vertex getRight() {
+	return right;
+}
+public void setRight(Vertex right) {
+	this.right = right;
+}
+public Vertex getParent() {
+	return parent;
+}
+public void setParent(Vertex parent) {
+	this.parent = parent;
+}
+
+	/* Linkes Kind
+	 */
+	protected Vertex left;
+	
+	/**
+	 * Rechtes Kind
+	 */
+	protected Vertex right;
+	
+	/**
+	 * Elternelement
+	 */
+	protected Vertex parent;
+	
+	/**
+	 * Wert des Knotens, hier: String, der Wort enthält
+	 */
   
   public Vertex(String id, String name) {
     this.id = id;
