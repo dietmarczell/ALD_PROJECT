@@ -14,7 +14,7 @@ public class Demo {
 		//Dijkstra Test
 		
 		HashMap<String, Vertex> Vertexeshash = new HashMap<>();
-		File f = new File("D://temp//ALD_UEBUNG_CSV.csv");
+		File f = new File("D://Files//ALD_UEBUNG_CSV.csv");
 		FileReader fr = new FileReader(f);
 		BufferedReader br = new BufferedReader(fr);
 		ArrayList<Vertex> vertexes = new ArrayList<Vertex>();
