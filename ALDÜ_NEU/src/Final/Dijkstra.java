@@ -18,7 +18,6 @@ public class Dijkstra {
   private HashMap<Vertex, Integer> distance;
 
   public Dijkstra(Graph graph) {
-    // create a copy of the array so that we can operate on this array
     this.nodes = new ArrayList<Vertex>(graph.getVertexes());
     this.edges = new ArrayList<Edge>(graph.getEdges());
   }
@@ -102,9 +101,9 @@ public class Dijkstra {
   }
 
   /*
-   * This method returns the path from the source to the selected target and
-   * NULL if no path exists
-   * also gets an ArrayList of all Edges to find the Name of the current Edge
+   * Hier wird der Pfad vom Anfang bis zum Eende Übergeben
+   * NULL wenn kein Pfad besteht
+   * Beinhaltet auch die Straßenennamen
    */
   
   public LinkedList<Vertex> getPath(Vertex target, ArrayList<Edge> edge_list) {
@@ -117,7 +116,7 @@ public class Dijkstra {
     path.add(step);
     while (predecessors.get(step) != null) {
     	
-    	//Expands the path by an Edge-name between two Vertexes
+    	//Straßenname zwischen 2 Knoten
     	for (Edge fromto : edge_list) {
 			if((fromto.getSource().equals((predecessors).get(step)))&&(fromto.getDestination().equals(step)))
 			{
@@ -128,7 +127,7 @@ public class Dijkstra {
      
       path.add(step);
     }
-    // Put it into the correct order
+    // Sortieren für die Ausgabe
     Collections.reverse(path);
     return path;
   }
