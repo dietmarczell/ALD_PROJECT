@@ -21,18 +21,8 @@ public class Graph {
 
 public int numVertices() {
 	// TODO Auto-generated method stub
-	return vertexes.size();
+	return vertexes.size()+1;
 }
-
-/*public List<Edge> getEdges(int current) {
-	// TODO Auto-generated method stub
-	List<Edge> result = new List<Edge>();
-	for (Edge edge : edges) {
-		if (edge.getDestination().equals(server.Vertexeshash.get(current)))
-			result.add(edge);
-	}
-	return result;
-}*/
   
   
   

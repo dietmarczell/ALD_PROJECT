@@ -14,10 +14,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 
 
 public class server {
-	private static final String Vertex = null;
 	static BufferedWriter bw = null;
 	static BufferedReader br = null;
 	static ServerSocket ss = null;
@@ -29,7 +30,7 @@ public class server {
 	static Timestamp time = new Timestamp(System.currentTimeMillis());
 	static String timenow = sdf.format(time);
 	
-	//jakob
+
 	static ArrayList<Edge> edge_list = new ArrayList<>();
 	private static Final.Vertex startvertex;
 	private static Final.Vertex endvertex;
@@ -38,12 +39,12 @@ public class server {
 
 //		Logger Anfang
 		
-		Logger.setPath("D://Files//RS_log.txt");
+		Logger.setPath("RS_log.txt");
 		//Logger Ende
 		
 		
 //		Import CSV Anfang
-		File fimport = new File("D://Files//ALD_UEBUNG_CSV.csv");
+		File fimport = new File("ALD_UEBUNG_CSV.csv");
 		FileReader fr;
 		try {
 			fr = new FileReader(fimport);
@@ -91,7 +92,7 @@ public class server {
 //			Datei erneut einlesen für Kanten
 			fr = new FileReader(fimport);
 			br = new BufferedReader(fr);
-//			variablen für Kanten
+//			Variablen für Kanten
 			int Kid = 0;
 			String srcid = null;
 			String destid = null;
@@ -135,33 +136,9 @@ public class server {
 		//Graph Ende
 		
 
-//		Dangerzone begin
+//		Dangerzone begins
 		Dijkstra ca = new Dijkstra(g);
-		
-/*		Alter Test auf Serverkonsole		
-		System.out.println(Vertexeshash.get("1"));
-		Vertex vx = new Vertex("1", "Graz");
-		System.out.println(vx);
-
-		BT.printNode(BT.root);
-		TODO String ignore case
-		
-
-		
-		/*Eingabe Anfang
-		String Eingabe_start = "Graz";
-		System.out.println(BT.search(Eingabe_start.trim(), BT.root));
-		test.BinaryTree.Node startnode = BT.search(Eingabe_start.trim(), BT.root);
-		Vertex startvertex = new Vertex(startnode.getKey().toString(), startnode.getname());
-		ca.execute(startvertex);*/
-		
-//		Eingabe Ende
-		/*String Eingabe_end = "Wien";
-		System.out.println(BT.search(Eingabe_end.trim(), BT.root));
-		test.BinaryTree.Node endnode = BT.search(Eingabe_end.trim(), BT.root);
-		Vertex endvertex = new Vertex(endnode.getKey().toString(), endnode.getname());
-		System.out.println(ca.getPath(endvertex));*/
-//		Alter Test Ende		
+		Tiefensuche ts = new Tiefensuche(g);
 		
 		try (ServerSocket ss = new ServerSocket(45000);)	
 		{	
@@ -177,7 +154,7 @@ public class server {
 				bw.newLine();
 				bw.write("Verfuegbare Befehle:");
 				bw.newLine();
-				bw.write("START:IHR STANDORT, ZIEL:GEWÜNSCHTES ZIEL, EXIT");
+				bw.write("STRATEGIE:GEWÜNSCHTE STRATEGIE,START:IHR STANDORT, ZIEL:GEWÜNSCHTES ZIEL, EXIT");
 				bw.newLine();
 				bw.write("Verfügbare Orte:");
 				bw.newLine();
@@ -194,7 +171,6 @@ public class server {
 				String consoleline = new String();
 				String Eingabe_start = new String();
 				String Eingabe_end = new String();
-				boolean found = false;
 				while((consoleline = br.readLine()) != null) 
 				{		
 					String[] consoleline_split = consoleline.split(":");
@@ -204,54 +180,45 @@ public class server {
 					{
 						Eingabe_start = consoleline.split(":")[1];
 						Eingabe_start = Eingabe_start.substring(0,1).toUpperCase() + Eingabe_start.substring(1);
-						
-						for (Vertex v : vertexes) {
-							if(v.getName().equals(Eingabe_start))
-							{
-								found = true;
+						try
+						{
+							
 								BinaryTree.Node startnode = BT.search(Eingabe_start.trim(), BT.root);
 								bw.write("Ihr Standort lautet: " + Eingabe_start);
 								bw.newLine();
 								bw.flush();
 								startvertex = new Vertex(startnode.getKey().toString(), startnode.getname());
-								break;
-							}
-							
 						}
-					if(!found)
-					{
-						bw.write("Startort nicht gefunden, Eingabe überprüfen");
-						bw.newLine();
-						bw.flush();
-					}
-						found = false;
-						
+						 catch(NullPointerException e)
+					      {
+					       //e.printStackTrace();
+					       bw.write("Startpunkt "+Eingabe_start+" nicht gefunden");
+					       bw.newLine();
+					       bw.flush();
+					      }
 						
 					}
 					else if(consoleline_split[0].toUpperCase().equals(commands[2]))
 					{
 						Eingabe_end = consoleline.split(":")[1];
 						Eingabe_end = Eingabe_end .substring(0,1).toUpperCase() + Eingabe_end .substring(1);
-						for (Vertex v : vertexes) {
-							if(v.getName().equals(Eingabe_end))
-							{
-								found = true;
-								BinaryTree.Node endnode = BT.search(Eingabe_end.trim(), BT.root);
-								bw.write("Ihr Standort lautet: " + Eingabe_end);
-								bw.newLine();
-								bw.flush();
-								endvertex = new Vertex(endnode.getKey().toString(), endnode.getname());
-								break;
-							}
-							
+						try
+						{
+
+							BinaryTree.Node endnode = BT.search(Eingabe_end.trim(), BT.root);
+							bw.write("Ihr Standort lautet: " + Eingabe_end);
+							bw.newLine();
+							bw.flush();
+							endvertex = new Vertex(endnode.getKey().toString(), endnode.getname());
 						}
-					if(!found)
-					{
-						bw.write("Zielort nicht gefunden, Eingabe überprüfen");
-						bw.newLine();
-						bw.flush();
-					}
-						found = false;
+						catch(NullPointerException e)
+						 {
+						       //e.printStackTrace();
+						       bw.write("Zielpunkt "+Eingabe_end+" nicht gefunden");
+						       bw.newLine();
+						       bw.flush();
+						 }
+
 						
 						
 					}
@@ -267,13 +234,17 @@ public class server {
 							bw.write("Kuerzester Weg: "+ca.getPath(endvertex, edge_list)); // soll auch ArrayList über Edges mitgeben
 							bw.flush();
 						}
-						else if(consoleline.toUpperCase().equals(strategies[1]))
+						else if(consoleline_split[1].toUpperCase().equals(strategies[1]))
 						{
-							
+
+							bw.write("Weg: " + ts.initialize(startvertex,endvertex,edge_list));
+							bw.newLine();
+							bw.flush();
 						}
-						else if(consoleline.toUpperCase().equals(strategies[2]))
+						else if(consoleline_split[2].toUpperCase().equals(strategies[2]))
 						{
-							
+							bw.write("under construction");
+							bw.flush();
 						}
 						else
 						{
@@ -323,4 +294,5 @@ public class server {
 			Logger.LogMessage(timenow + "Inputs und Outputs können nicht Ordnungsgemäß geschlossen werden");
 		}	
 	}
+	
 }

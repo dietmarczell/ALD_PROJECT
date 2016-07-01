@@ -3,9 +3,13 @@ package Final;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+
+
 
 public class Demo {
 
@@ -67,13 +71,17 @@ public class Demo {
 		}
 		/*System.out.println("------------------------------");
 		System.out.println(Vertexes.toString());*/
-		Graph g = new Graph(vertexes, edges);
-		Dijkstra ca = new Dijkstra(g);
-		System.out.println(Vertexeshash.get("1"));
+		Graph G = new Graph(vertexes, edges);
+		Dijkstra ca = new Dijkstra(G);
 		Vertex vx = new Vertex("1", "Graz");
-		Vertex vy = new Vertex("2", "Innsbruck");
+		Vertex vy = new Vertex("15", "Amstetten");
+		findByBreitenSuche(G, Integer.parseInt(vx.getId()), Integer.parseInt(vy.getId()));
+		
+		/*System.out.println(Vertexeshash.get("1"));
+		;
+		
 		System.out.println(vx.toString());
-		ca.execute(vx);
+		ca.execute(vx);*/
 		//System.out.println(ca.getPath(vy),null);
 		
 		
@@ -86,14 +94,51 @@ public class Demo {
 		/*System.out.println("Arraylist  katnen mit Objekten KANTEN: -----------------------");
 		for (Kanten x : kanten) {System.out.println(x.toString());	}
 	//	for (Or is : con) {*/
+	}	
 			
+		
+private static void findByBreitenSuche(
+		Graph g, int von, int nach) {
+
+ArrayDeque<Integer> nodes = new ArrayDeque<Integer>();
+
+boolean[] visited = new boolean[g.numVertices()];
+int[] pred = new int[g.numVertices()];
+boolean found = false;
+
+for(int i=0; i<pred.length; i++) {
+	pred[i] =-1; 
+}
+
+nodes.add(von);
+
+outer: while(!nodes.isEmpty()) {
+
+	int current = nodes.poll();
+	visited[current] = true;
+	List<Vertex> nachbarn = g.getVertexes();
+	//List<WeightedEdge> nachbarn = g.getEdges(current);
+	for(Vertex nachbar: nachbarn) {
+		if (!visited[Integer.parseInt(nachbar.getId())]) {
+			nodes.add(Integer.parseInt(nachbar.getId()));
+			pred[Integer.parseInt(nachbar.getId())] = current;
 			
+			if (Integer.parseInt(nachbar.getId()) == nach) {
+				found = true;
+				break outer;
+			}
 		}
-		
-		
-			
-		}
-		
+	}
+}
 
+if (found) {
+// Route ausgeben
+for(int i=0; i<pred.length; i++) {
+	System.out.println(i + " über " + pred[i]);
+}
+}
+else {
+System.out.println("Keine Verbindung gefunden");
+}
 
-
+}}
